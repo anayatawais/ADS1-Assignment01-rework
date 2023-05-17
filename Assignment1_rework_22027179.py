@@ -35,4 +35,37 @@ tmar_df = tmar_df.reset_index()
 tmar_df = tmar_df[['Country Name','2021']]
 tmar_df = tmar_df.dropna()
 options = ['Sub-Saharan Africa', 'Finland', 'Indonesia', 'France', 'Argentina','Germany', 'Mexico']
+
+# selecting rows based on condition
+tmar_df = tmar_df[tmar_df['Country Name'].isin(options)]
+# Plotting the pie chart for above dataframe
+tmar_df.groupby(['Country Name']).sum().plot(
+    kind='pie', y='2021', autopct='%1.0f%%', figsize=(8, 8))
+plt.title('Terrestrial and marine protected areas')
+# Grouped barchart for School enrollment, primary and secondary
+educ_df = data[data['Indicator Name'].str.contains('School enrollment, primary and secondary')]
+educ_df = educ_df.reset_index()
+options = ['Sub-Saharan Africa', 'Finland', 'Indonesia', 'France', 'Argentina','Germany', 'Mexico']
   
+# selecting rows based on condition
+educ_df = educ_df[educ_df['Country Name'].isin(options)]
+educ_df = educ_df[['Country Name','1996','1999','2000','2002','2004','2006','2010']]
+grouped_df = educ_df.groupby(['Country Name']).sum()
+plot_df = grouped_df[['1996', '1999', '2000', '2002', '2004', '2006', '2010']]# Set the years as the x-axis labels
+years = list(plot_df.columns)
+x = np.arange(len(years))
+# Create the plot
+fig, ax = plt.subplots(figsize=(12, 8))
+bar_width = 0.1
+for i, country in enumerate(plot_df.index):
+    plt.bar(x + i * bar_width, plot_df.loc[country], bar_width, label=country)
+
+# Add labels, title, and legend
+plt.xlabel('Years')
+plt.ylabel('School enrollment, primary and secondary (gross), gender parity index (GPI)')
+plt.xticks(x + bar_width * len(plot_df) / 2, years)
+plt.title('Year-wise representation of GPI')
+plt.legend()
+
+# Display the plot
+plt.show()
